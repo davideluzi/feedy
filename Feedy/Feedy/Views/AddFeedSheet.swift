@@ -38,17 +38,40 @@ struct AddFeedSheet: View {
               url.scheme?.hasPrefix("http") == true else {
             errorMessage = "Enter a valid http(s) URL."; return
         }
+
+        // Pre-check for an existing subscription before hitting the network.
+        let target = url.absoluteString
+        var descriptor = FetchDescriptor<Feed>(predicate: #Predicate { $0.url == target })
+        descriptor.fetchLimit = 1
+        if let existing = try? context.fetch(descriptor), !existing.isEmpty {
+            errorMessage = "You're already subscribed to this feed."
+            return
+        }
+
+        let parsed: ParsedFeed
         do {
             let data = try await fetcher.fetch(url: url)
-            let parsed = try parser.parse(data: data, sourceURL: url)   // validation
+            parsed = try parser.parse(data: data, sourceURL: url)   // validation
+        } catch {
+            errorMessage = "This does not look like a valid RSS feed."
+            return
+        }
+
+        do {
             let feed = Feed(url: url.absoluteString,
                             title: parsed.title ?? url.host ?? url.absoluteString,
                             siteURL: parsed.siteURL)
             context.insert(feed)
             try context.save()
+
+            let importer = ArticleImporter(sanitizer: HTMLSanitizer())
+            try importer.importArticles(parsed.articles, into: feed, context: context)
+            feed.lastFetchDate = .now
+            try context.save()
+
             dismiss()
         } catch {
-            errorMessage = "This does not look like a valid RSS feed."
+            errorMessage = "Couldn't save the new feed. Please try again."
         }
     }
 }
