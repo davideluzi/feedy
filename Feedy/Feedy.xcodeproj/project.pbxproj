@@ -15,12 +15,18 @@
 
 /* Begin PBXFileReference section */
 		6B6965EE302C7E3F0088AF65 /* Feedy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Feedy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B6965EF302C7E3F0088AF66 /* FeedyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeedyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6B6965F0302C7E3F0088AF65 /* Feedy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Feedy;
+			sourceTree = "<group>";
+		};
+		6B6965F1302C7E3F0088AF66 /* FeedyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FeedyTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +40,13 @@
 				6B696607302C7EC60088AF65 /* SwiftSoupProfile in Frameworks */,
 				6B696602302C7EAB0088AF65 /* XMLKit in Frameworks */,
 				6B696605302C7EC60088AF65 /* SwiftSoup in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6965F4302C7E3F0088AF66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				6B6965EE302C7E3F0088AF65 /* Feedy.app */,
+				6B6965EF302C7E3F0088AF66 /* FeedyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -84,6 +98,26 @@
 			productName = Feedy;
 			productReference = 6B6965EE302C7E3F0088AF65 /* Feedy.app */;
 			productType = "com.apple.product-type.application";
+		};
+		6B6965F2302C7E3F0088AF66 /* FeedyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B6965FE302C7E400088AF66 /* Build configuration list for PBXNativeTarget "FeedyTests" */;
+			buildPhases = (
+				6B6965F3302C7E3F0088AF66 /* Sources */,
+				6B6965F4302C7E3F0088AF66 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6B6965F5302C7E3F0088AF66 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				6B6965F1302C7E3F0088AF66 /* FeedyTests */,
+			);
+			name = FeedyTests;
+			productName = FeedyTests;
+			productReference = 6B6965EF302C7E3F0088AF66 /* FeedyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -119,6 +153,7 @@
 			projectRoot = "";
 			targets = (
 				6B6965ED302C7E3F0088AF65 /* Feedy */,
+				6B6965F2302C7E3F0088AF66 /* FeedyTests */,
 			);
 		};
 /* End PBXProject section */
@@ -141,7 +176,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6B6965F3302C7E3F0088AF66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6B6965F5302C7E3F0088AF66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6B6965ED302C7E3F0088AF65 /* Feedy */;
+			targetProxy = 6B6965F6302C7E3F0088AF66 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		6B6965F6302C7E3F0088AF66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B6965E6302C7E3F0088AF65 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B6965ED302C7E3F0088AF65;
+			remoteInfo = Feedy;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		6B6965F9302C7E400088AF65 /* Debug */ = {
@@ -330,6 +390,40 @@
 			};
 			name = Release;
 		};
+		6B6965FF302C7E400088AF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8PU9LS3T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = DavideLuzi.FeedyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Feedy.app/Contents/MacOS/Feedy";
+			};
+			name = Debug;
+		};
+		6B696600302C7E400088AF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8PU9LS3T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = DavideLuzi.FeedyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Feedy.app/Contents/MacOS/Feedy";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -347,6 +441,15 @@
 			buildConfigurations = (
 				6B6965FC302C7E400088AF65 /* Debug */,
 				6B6965FD302C7E400088AF65 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6B6965FE302C7E400088AF66 /* Build configuration list for PBXNativeTarget "FeedyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B6965FF302C7E400088AF66 /* Debug */,
+				6B696600302C7E400088AF66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
