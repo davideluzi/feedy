@@ -24,6 +24,25 @@ final class FeedKitParserTests: XCTestCase {
         XCTAssertTrue(first.contentHTML.contains("Hello"))
     }
 
+    func test_parsesAtomIntoNormalizedModel() throws {
+        let data = try fixtureData("sample-atom", "xml")
+        let parser = FeedKitParser()
+        let feed = try parser.parse(data: data,
+                                    sourceURL: URL(string: "https://atom.example.com/feed.xml")!)
+
+        XCTAssertEqual(feed.title, "Example Atom Blog")
+        XCTAssertEqual(feed.siteURL, "https://atom.example.com")
+        XCTAssertEqual(feed.articles.count, 1)
+
+        let first = feed.articles[0]
+        XCTAssertEqual(first.title, "First Atom Post")
+        XCTAssertEqual(first.link, "https://atom.example.com/first")
+        XCTAssertEqual(first.guid, "https://atom.example.com/first")
+        XCTAssertEqual(first.author, "Jane")
+        XCTAssertNotNil(first.publishedDate)
+        XCTAssertTrue(first.contentHTML.contains("Hello"))
+    }
+
     func test_throwsOnGarbage() {
         let parser = FeedKitParser()
         let data = Data("not a feed".utf8)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Atom Blog</title>
+  <link rel="alternate" href="https://atom.example.com"/>
+  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+  <updated>2023-11-13T12:00:00Z</updated>
+  <entry>
+    <title>First Atom Post</title>
+    <link rel="alternate" href="https://atom.example.com/first"/>
+    <id>https://atom.example.com/first</id>
+    <author>
+      <name>Jane</name>
+    </author>
+    <updated>2023-11-13T12:00:00Z</updated>
+    <content type="html"><![CDATA[<p>Hello <b>atom</b></p>]]></content>
+  </entry>
+</feed>
