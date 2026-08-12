@@ -1,0 +1,54 @@
+import SwiftUI
+import SwiftData
+
+struct AddFeedSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+    @State private var urlString = ""
+    @State private var errorMessage: String?
+    @State private var isValidating = false
+
+    let parser: FeedParsing = FeedKitParser()
+    let fetcher: FeedFetching = URLSessionFetcher()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Add Feed").font(.headline)
+            TextField("https://example.com/feed.xml", text: $urlString)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 360)
+            if let errorMessage { Text(errorMessage).foregroundStyle(.red).font(.caption) }
+            HStack {
+                Spacer()
+                Button("Cancel") { dismiss() }
+                Button("Add") { Task { await validateAndAdd() } }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(isValidating || urlString.isEmpty)
+            }
+        }
+        .padding()
+    }
+
+    @MainActor
+    private func validateAndAdd() async {
+        errorMessage = nil
+        isValidating = true
+        defer { isValidating = false }
+        guard let url = URL(string: urlString.trimmingCharacters(in: .whitespaces)),
+              url.scheme?.hasPrefix("http") == true else {
+            errorMessage = "Enter a valid http(s) URL."; return
+        }
+        do {
+            let data = try await fetcher.fetch(url: url)
+            let parsed = try parser.parse(data: data, sourceURL: url)   // validation
+            let feed = Feed(url: url.absoluteString,
+                            title: parsed.title ?? url.host ?? url.absoluteString,
+                            siteURL: parsed.siteURL)
+            context.insert(feed)
+            try context.save()
+            dismiss()
+        } catch {
+            errorMessage = "This does not look like a valid RSS feed."
+        }
+    }
+}
