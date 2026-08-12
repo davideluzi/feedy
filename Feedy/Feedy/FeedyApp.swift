@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct FeedyApp: App {
@@ -11,5 +12,6 @@ struct FeedyApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [Feed.self, Article.self])
     }
 }
