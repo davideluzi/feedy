@@ -23,7 +23,7 @@ struct ArticleListView: View {
     private var articles: [Article] {
         let base: [Article] = selectedFeed?.articles ?? feeds.flatMap { $0.articles }
         return base
-            .filter { showOnlyUnread ? !$0.isRead : true }
+            .filter { showOnlyUnread ? (!$0.isRead || $0.persistentModelID == selectedArticle?.persistentModelID) : true }
             .filter { searchText.isEmpty
                 ? true
                 : ($0.title.localizedStandardContains(searchText)
