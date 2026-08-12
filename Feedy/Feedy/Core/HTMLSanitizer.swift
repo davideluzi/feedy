@@ -8,6 +8,10 @@ struct SanitizedContent {
     var plainText: String
 }
 
+protocol HTMLSanitizing {
+    func sanitize(html: String, baseURL: String) throws -> SanitizedContent
+}
+
 /// The only file in Feedy allowed to `import SwiftSoup`. Cleans feed HTML once:
 /// drops dangerous/inconsistent elements, resolves relative URLs to absolute
 /// against the article link, and produces both cleaned HTML and plain text.
@@ -40,3 +44,5 @@ struct HTMLSanitizer {
         return SanitizedContent(html: cleanedHTML, plainText: plain)
     }
 }
+
+extension HTMLSanitizer: HTMLSanitizing {}
