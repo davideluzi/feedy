@@ -63,20 +63,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6B39E5E3302C869400412452 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				6B6965F1302C7E3F0088AF66 /* FeedyTests */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		6B6965E5302C7E3F0088AF65 = {
 			isa = PBXGroup;
 			children = (
 				6B6965F0302C7E3F0088AF65 /* Feedy */,
+				6B6965F1302C7E3F0088AF66 /* FeedyTests */,
 				6B6965EF302C7E3F0088AF65 /* Products */,
-				6B39E5E3302C869400412452 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
