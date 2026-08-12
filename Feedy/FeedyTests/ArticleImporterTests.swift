@@ -3,10 +3,12 @@ import SwiftData
 @testable import Feedy
 
 final class ArticleImporterTests: XCTestCase {
+    var container: ModelContainer!
+
     @MainActor
     func makeContext() throws -> ModelContext {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Feed.self, Article.self, configurations: config)
+        container = try ModelContainer(for: Feed.self, Article.self, configurations: config)
         return container.mainContext
     }
 
