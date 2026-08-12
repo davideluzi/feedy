@@ -11,7 +11,7 @@ import XMLKit
 /// the app that may import FeedKit.
 struct FeedKitParser: FeedParsing {
     func parse(data: Data, sourceURL: URL) throws -> ParsedFeed {
-        let feed = try Feed(data: data)
+        let feed = try FeedKit.Feed(data: data)
         switch feed {
         case .rss(let rss):
             return mapRSS(rss)

@@ -13,6 +13,16 @@
 		6B696607302C7EC60088AF65 /* SwiftSoupProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 6B696606302C7EC60088AF65 /* SwiftSoupProfile */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6B6965F6302C7E3F0088AF66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B6965E6302C7E3F0088AF65 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B6965ED302C7E3F0088AF65;
+			remoteInfo = Feedy;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		6B6965EE302C7E3F0088AF65 /* Feedy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Feedy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B6965EF302C7E3F0088AF66 /* FeedyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeedyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,11 +63,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B39E5E3302C869400412452 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				6B6965F1302C7E3F0088AF66 /* FeedyTests */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		6B6965E5302C7E3F0088AF65 = {
 			isa = PBXGroup;
 			children = (
 				6B6965F0302C7E3F0088AF65 /* Feedy */,
 				6B6965EF302C7E3F0088AF65 /* Products */,
+				6B39E5E3302C869400412452 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -200,16 +219,6 @@
 			targetProxy = 6B6965F6302C7E3F0088AF66 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXContainerItemProxy section */
-		6B6965F6302C7E3F0088AF66 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6B6965E6302C7E3F0088AF65 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6B6965ED302C7E3F0088AF65;
-			remoteInfo = Feedy;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		6B6965F9302C7E400088AF65 /* Debug */ = {
