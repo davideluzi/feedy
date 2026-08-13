@@ -1,6 +1,9 @@
 import SwiftUI
+import SwiftData
+import AppKit
 
 struct ArticleDetailView: View {
+    @Environment(\.modelContext) private var context
     let article: Article?
 
     var body: some View {
@@ -20,7 +23,13 @@ struct ArticleDetailView: View {
                     WebView(html: ArticleRenderer.document(title: article.title,
                                                            feedName: article.feed?.title,
                                                            bodyHTML: article.bodyHTML),
-                            baseURL: article.link.flatMap(URL.init(string:)))
+                            baseURL: article.link.flatMap(URL.init(string:)),
+                            isRead: article.isRead,
+                            link: article.link,
+                            onToggleRead: {
+                                article.isRead.toggle()
+                                try? context.save()
+                            })
                 }
             }
             .toolbar {
@@ -28,6 +37,18 @@ struct ArticleDetailView: View {
                     ToolbarItem {
                         Link(destination: url) { Image(systemName: "safari") }
                             .help("Open in Browser")
+                    }
+                }
+            }
+            .contextMenu {
+                Button(article.isRead ? "Mark as Unread" : "Mark as Read") {
+                    article.isRead.toggle()
+                    try? context.save()
+                }
+                if let link = article.link {
+                    Button("Copy Link") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(link, forType: .string)
                     }
                 }
             }

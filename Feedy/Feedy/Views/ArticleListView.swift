@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct ArticleListView: View {
     @Environment(\.modelContext) private var context
@@ -114,5 +115,17 @@ struct ArticleRow: View {
             }
         }
         .padding(.vertical, 2)
+        .contextMenu {
+            Button(article.isRead ? "Mark as Unread" : "Mark as Read") {
+                article.isRead.toggle()
+                try? context.save()
+            }
+            if let link = article.link {
+                Button("Copy Link") {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(link, forType: .string)
+                }
+            }
+        }
     }
 }
