@@ -34,4 +34,14 @@ final class ArticleRendererTests: XCTestCase {
         let html = ArticleRenderer.document(title: "My Post", feedName: "A & B <x>", bodyHTML: "", css: "")
         XCTAssertTrue(html.contains("<p class=\"feed-name\">A &amp; B &lt;x&gt;</p>"))
     }
+
+    func test_defaultsToSeventeenPixelFontSize() {
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "", css: "")
+        XCTAssertTrue(html.contains("body { font-size: 17.0px; }"))
+    }
+
+    func test_appliesCustomFontSize() {
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "", css: "", fontSize: 22)
+        XCTAssertTrue(html.contains("body { font-size: 22.0px; }"))
+    }
 }
