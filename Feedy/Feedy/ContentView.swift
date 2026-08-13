@@ -17,7 +17,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            SidebarView(selection: $selection)
+            SidebarView(selection: $selection, selectedArticle: $selectedArticle)
                 .frame(minWidth: 200)
         } content: {
             ArticleListView(selection: selection,

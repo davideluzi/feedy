@@ -57,21 +57,31 @@ struct AddFeedSheet: View {
             return
         }
 
+        let feed = Feed(url: url.absoluteString,
+                        title: parsed.title ?? url.host ?? url.absoluteString,
+                        siteURL: parsed.siteURL)
+        context.insert(feed)
         do {
-            let feed = Feed(url: url.absoluteString,
-                            title: parsed.title ?? url.host ?? url.absoluteString,
-                            siteURL: parsed.siteURL)
-            context.insert(feed)
             try context.save()
+        } catch {
+            context.delete(feed)
+            errorMessage = "Couldn't save the new feed. Please try again."
+            return
+        }
 
+        do {
             let importer = ArticleImporter(sanitizer: HTMLSanitizer())
             try importer.importArticles(parsed.articles, into: feed, context: context)
             feed.lastFetchDate = .now
             try context.save()
-
             dismiss()
         } catch {
-            errorMessage = "Couldn't save the new feed. Please try again."
+            // Roll back the feed we just inserted so it doesn't linger, empty
+            // and unrecoverable behind the "already subscribed" check, if
+            // importing its articles fails.
+            context.delete(feed)
+            try? context.save()
+            errorMessage = "Added the feed but couldn't import its articles. Please try again."
         }
     }
 }

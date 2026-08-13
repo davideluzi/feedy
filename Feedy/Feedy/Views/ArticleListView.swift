@@ -90,6 +90,7 @@ struct ArticleRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(article.title).font(.headline).lineLimit(2)
+                Text(article.bodyPlainText.prefix(240)).font(.system(size: 11)).lineLimit(3)
                 if let date = article.publishedDate {
                     Text(date, format: .dateTime.year().month().day())
                         .font(.caption).foregroundStyle(.secondary)
