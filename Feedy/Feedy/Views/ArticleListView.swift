@@ -89,6 +89,9 @@ struct ArticleRow: View {
             .help(article.isRead ? "Mark as unread" : "Mark as read")
 
             VStack(alignment: .leading, spacing: 2) {
+                if let feedName = article.feed?.title, !feedName.isEmpty {
+                    Text(feedName).font(.caption2).foregroundStyle(.secondary)
+                }
                 Text(article.title).font(.headline).lineLimit(2)
                 Text(article.bodyPlainText.prefix(240)).font(.system(size: 11)).lineLimit(3)
                 if let date = article.publishedDate {
