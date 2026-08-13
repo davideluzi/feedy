@@ -78,18 +78,31 @@ struct ArticleRow: View {
     @Environment(\.modelContext) private var context
     let article: Article
 
+    private var feedName: String? {
+        guard let name = article.feed?.title, !name.isEmpty else { return nil }
+        return name
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Button { article.isRead.toggle(); try? context.save() } label: {
-                Image(systemName: article.isRead ? "circle" : "circle.fill")
-                    .font(.system(size: 9))
-                    .foregroundStyle(article.isRead ? .secondary : Color.accentColor)
+            VStack(spacing: 2) {
+                // Mirrors the feed-name line's height so the dot lines up with
+                // the title below it instead of the feed name above it.
+                if feedName != nil {
+                    Text(" ").font(.caption2).hidden()
+                }
+                Button { article.isRead.toggle(); try? context.save() } label: {
+                    Image(systemName: article.isRead ? "circle" : "circle.fill")
+                        .font(.system(size: 9))
+                        .foregroundStyle(article.isRead ? .secondary : Color.accentColor)
+                }
+                .buttonStyle(.plain)
+                .help(article.isRead ? "Mark as unread" : "Mark as read")
+                .padding(.top, 3)
             }
-            .buttonStyle(.plain)
-            .help(article.isRead ? "Mark as unread" : "Mark as read")
 
             VStack(alignment: .leading, spacing: 2) {
-                if let feedName = article.feed?.title, !feedName.isEmpty {
+                if let feedName {
                     Text(feedName).font(.caption2).foregroundStyle(.secondary)
                 }
                 Text(article.title).font(.headline).lineLimit(2)
