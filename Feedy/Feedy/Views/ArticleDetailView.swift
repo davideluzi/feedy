@@ -51,6 +51,7 @@ struct ArticleDetailView: View {
                 } else {
                     WebView(html: ArticleRenderer.document(title: article.title,
                                                            feedName: article.feed?.title,
+                                                           publishedDate: article.publishedDate,
                                                            bodyHTML: (isTranslated ? translatedHTML : nil) ?? article.bodyHTML,
                                                            fontSize: fontSize),
                             baseURL: article.link.flatMap(URL.init(string:)),

@@ -3,8 +3,9 @@ import Foundation
 enum ArticleRenderer {
     /// Pure document builder (testable). `fontSize` is layered in as its own <style> tag,
     /// after the base stylesheet, so it overrides the base body font-size on the cascade.
-    static func document(title: String, feedName: String?, bodyHTML: String, css: String, fontSize: Double = 17) -> String {
+    static func document(title: String, feedName: String?, publishedDate: Date?, bodyHTML: String, css: String, fontSize: Double = 17) -> String {
         let feedNameHTML = feedName.map { "<p class=\"feed-name\">\(escape($0))</p>" } ?? ""
+        let dateHTML = publishedDate.map { "<p class=\"published-date\">\(escape($0.formatted(.dateTime.year().month().day())))</p>" } ?? ""
         return """
         <!doctype html>
         <html>
@@ -17,6 +18,7 @@ enum ArticleRenderer {
         <body>
         \(feedNameHTML)
         <h1>\(escape(title))</h1>
+        \(dateHTML)
         \(bodyHTML)
         </body>
         </html>
@@ -24,9 +26,9 @@ enum ArticleRenderer {
     }
 
     /// Convenience that loads the bundled stylesheet.
-    static func document(title: String, feedName: String?, bodyHTML: String, fontSize: Double = 17) -> String {
+    static func document(title: String, feedName: String?, publishedDate: Date?, bodyHTML: String, fontSize: Double = 17) -> String {
         let css = loadCSS()
-        return document(title: title, feedName: feedName, bodyHTML: bodyHTML, css: css, fontSize: fontSize)
+        return document(title: title, feedName: feedName, publishedDate: publishedDate, bodyHTML: bodyHTML, css: css, fontSize: fontSize)
     }
 
     static func loadCSS() -> String {

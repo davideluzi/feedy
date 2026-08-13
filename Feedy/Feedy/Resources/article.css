@@ -30,6 +30,9 @@ body {
   color: var(--muted); font-size: 0.85em; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 0.1em;
 }
+.published-date {
+  color: var(--muted); font-size: 0.85em; margin: 0 0 1em;
+}
 h1, h2, h3 { line-height: 1.25; }
 h1 {margin-top: 0.2em; }
 a { color: var(--link); }
