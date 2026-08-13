@@ -1,6 +1,24 @@
 import SwiftUI
 import SwiftData
 import AppKit
+import Translation
+
+/// Adapts a live TranslationSession (only obtainable via SwiftUI's .translationTask, tied to
+/// view lifecycle) to the plain, testable TextBatchTranslating protocol ArticleTranslator uses.
+private struct SessionTextTranslator: TextBatchTranslating {
+    let session: TranslationSession
+
+    func translate(_ texts: [String]) async throws -> [String] {
+        let requests = texts.enumerated().map {
+            TranslationSession.Request(sourceText: $1, clientIdentifier: String($0))
+        }
+        let responses = try await session.translations(from: requests)
+        let byIdentifier = Dictionary(uniqueKeysWithValues: responses.compactMap { response in
+            response.clientIdentifier.flatMap(Int.init).map { ($0, response.targetText) }
+        })
+        return texts.indices.map { byIdentifier[$0] ?? texts[$0] }
+    }
+}
 
 struct ArticleDetailView: View {
     static let defaultFontSize: Double = 16
@@ -10,6 +28,12 @@ struct ArticleDetailView: View {
     let article: Article?
 
     private let fontSizeRange: ClosedRange<Double> = 12...28
+
+    @State private var isTranslated = false
+    @State private var isTranslating = false
+    @State private var translatedHTML: String?
+    @State private var translationConfiguration: TranslationSession.Configuration?
+    @State private var translationError: String?
 
     var body: some View {
         if let article {
@@ -27,7 +51,7 @@ struct ArticleDetailView: View {
                 } else {
                     WebView(html: ArticleRenderer.document(title: article.title,
                                                            feedName: article.feed?.title,
-                                                           bodyHTML: article.bodyHTML,
+                                                           bodyHTML: (isTranslated ? translatedHTML : nil) ?? article.bodyHTML,
                                                            fontSize: fontSize),
                             baseURL: article.link.flatMap(URL.init(string:)),
                             isRead: article.isRead,
@@ -55,12 +79,62 @@ struct ArticleDetailView: View {
                     .help("Increase Font Size")
                     .disabled(fontSize >= fontSizeRange.upperBound)
                 }
+                ToolbarItem {
+                    Toggle(isOn: Binding(
+                        get: { isTranslated },
+                        set: { wantsTranslated in
+                            if !wantsTranslated {
+                                isTranslated = false
+                            } else if translatedHTML != nil {
+                                isTranslated = true
+                            } else {
+                                isTranslating = true
+                                translationConfiguration = TranslationSession.Configuration(
+                                    source: Locale.Language(identifier: "en"),
+                                    target: Locale.Language(identifier: "it"))
+                            }
+                        }
+                    )) {
+                        if isTranslating {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Image(systemName: "translate")
+                        }
+                    }
+                    .help(isTranslated ? "Show Original" : "Translate to Italian")
+                    .disabled(isTranslating)
+                }
                 if let link = article.link, let url = URL(string: link) {
                     ToolbarItem {
-                        Link(destination: url) { Image(systemName: "safari") }
+                        Link(destination: url) { Image(systemName: "safari").imageScale(.large) }
                             .help("Open in Browser")
                     }
                 }
+            }
+            .translationTask(translationConfiguration) { session in
+                do {
+                    let translated = try await ArticleTranslator.translatedHTML(
+                        from: article.bodyHTML, using: SessionTextTranslator(session: session))
+                    translatedHTML = translated
+                    isTranslated = true
+                } catch {
+                    translationError = error.localizedDescription
+                }
+                isTranslating = false
+            }
+            .onChange(of: article.persistentModelID) {
+                isTranslated = false
+                isTranslating = false
+                translatedHTML = nil
+                translationConfiguration = nil
+                translationError = nil
+            }
+            .alert("Translation Failed",
+                   isPresented: Binding(get: { translationError != nil }, set: { if !$0 { translationError = nil } }),
+                   presenting: translationError) { _ in
+                Button("OK", role: .cancel) {}
+            } message: { message in
+                Text(message)
             }
             .background {
                 // Cmd-0 resets font size, mirroring Safari's zoom-reset shortcut. No visible
