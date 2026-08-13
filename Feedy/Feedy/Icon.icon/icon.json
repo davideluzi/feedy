@@ -1,0 +1,41 @@
+{
+  "fill" : {
+    "solid" : "display-p3:0.98671,0.98249,0.96013,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "display-p3:1.00000,0.26665,0.27244,1.00000"
+          },
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Feedy2.png",
+          "name" : "Feedy2",
+          "position" : {
+            "scale" : 0.87,
+            "translation-in-points" : [
+              25.400000000000134,
+              -7
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
