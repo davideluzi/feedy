@@ -107,8 +107,10 @@ struct ArticleDetailView: View {
                 }
                 if let link = article.link, let url = URL(string: link) {
                     ToolbarItem {
-                        Link(destination: url) { Image(systemName: "safari").imageScale(.large) }
-                            .help("Open in Browser")
+                        Button { NSWorkspace.shared.open(url) } label: {
+                            Image(systemName: "safari").imageScale(.large)
+                        }
+                        .help("Open in Browser")
                     }
                 }
             }
