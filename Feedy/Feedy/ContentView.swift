@@ -33,6 +33,7 @@ struct ContentView: View {
         .task {
             guard !didRefreshOnLaunch else { return }
             didRefreshOnLaunch = true
+            WebKitWarmer.warm()
             let service = FeedRefreshService(fetcher: URLSessionFetcher(),
                                              parser: FeedKitParser(),
                                              importer: ArticleImporter(sanitizer: HTMLSanitizer()))
