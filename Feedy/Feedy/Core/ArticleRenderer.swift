@@ -2,8 +2,9 @@ import Foundation
 
 enum ArticleRenderer {
     /// Pure document builder (testable).
-    static func document(title: String, bodyHTML: String, css: String) -> String {
-        """
+    static func document(title: String, feedName: String?, bodyHTML: String, css: String) -> String {
+        let feedNameHTML = feedName.map { "<p class=\"feed-name\">\(escape($0))</p>" } ?? ""
+        return """
         <!doctype html>
         <html>
         <head>
@@ -12,6 +13,7 @@ enum ArticleRenderer {
         <style>\(css)</style>
         </head>
         <body>
+        \(feedNameHTML)
         <h1>\(escape(title))</h1>
         \(bodyHTML)
         </body>
@@ -20,9 +22,9 @@ enum ArticleRenderer {
     }
 
     /// Convenience that loads the bundled stylesheet.
-    static func document(title: String, bodyHTML: String) -> String {
+    static func document(title: String, feedName: String?, bodyHTML: String) -> String {
         let css = loadCSS()
-        return document(title: title, bodyHTML: bodyHTML, css: css)
+        return document(title: title, feedName: feedName, bodyHTML: bodyHTML, css: css)
     }
 
     static func loadCSS() -> String {

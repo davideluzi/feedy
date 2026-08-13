@@ -26,6 +26,10 @@ body {
   max-width: 680px;
   word-wrap: break-word;
 }
+.feed-name {
+  color: var(--muted); font-size: 0.85em; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 0.4em;
+}
 h1, h2, h3 { line-height: 1.25; }
 a { color: var(--link); }
 img, figure, video { max-width: 100%; height: auto; }

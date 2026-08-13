@@ -18,6 +18,7 @@ struct ArticleDetailView: View {
                     }
                 } else {
                     WebView(html: ArticleRenderer.document(title: article.title,
+                                                           feedName: article.feed?.title,
                                                            bodyHTML: article.bodyHTML),
                             baseURL: article.link.flatMap(URL.init(string:)))
                 }
