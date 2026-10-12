@@ -1,58 +1,91 @@
-# Feedy
+<p align="center">
+  <img src="assets/Icon-iOS-Default-1024x1024@1x.png" alt="Feedy icon" width="128">
+</p>
 
-Feedy è un lettore RSS nativo per macOS, con un'interfaccia a tre colonne in stile Mail: elenco feed a sinistra, lista articoli (con stato letto/non letto e ricerca) al centro, vista articolo a destra.
+<h1 align="center">Feedy</h1>
 
-## Funzionalità
+<p align="center">
+  A small, native RSS reader for macOS. Free and open source.
+</p>
 
-- Aggiunta/rimozione feed (RSS, Atom, JSON Feed)
-- Aggiornamento all'avvio e su richiesta (bottone in toolbar / Cmd-R)
-- Stato letto/non letto per articolo, con menu contestuale per segnare come letto/non letto e copiare il link
-- Rendering articoli con stile coerente (CSS unico, indipendente dal feed sorgente) e font size regolabile (A-/A+, Cmd-+/Cmd--/Cmd-0)
-- Traduzione articoli inglese → italiano on-device, tramite il framework `Translation` di Apple
-- Indicatore di salute per ogni feed (ultimo errore di fetch, se presente)
+<!-- TODO: add a screenshot, e.g. assets/screenshot.png -->
 
-## Stack tecnico
+Feedy is a native macOS RSS reader with a three-column layout like Mail. Your feeds are on the left, the article list is in the middle (with read/unread state and search), and the selected article is on the right. Every article uses the same clean typography, whatever site it comes from.
 
-Swift, SwiftUI, SwiftData, WKWebView, [FeedKit](https://github.com/nmdias/FeedKit) 10.4 (parsing RSS/Atom/JSON), [SwiftSoup](https://github.com/scinfu/SwiftSoup) (sanitizzazione HTML), framework `Translation` di Apple, XCTest.
+## Features
 
-Richiede macOS 15.0+ (deployment target, alzato da 14 per `Translation`).
+- Subscribe to **RSS, Atom and JSON Feed** sources, and unsubscribe just as easily
+- Refresh on launch or on demand (toolbar button or **⌘R**)
+- Read/unread tracking, with a context menu to mark articles read or unread and to copy their link
+- **Consistent article rendering:** one bundled stylesheet styles every article, and the HTML is sanitized (no scripts, iframes or inline handlers)
+- Adjustable font size (toolbar **A− / A+**, **⌘+ / ⌘− / ⌘0**)
+- **On-device translation** from English to Italian through Apple's `Translation` framework. Nothing is sent to third-party services.
+- A health indicator for each feed that shows the last fetch error, if there was one
+- Links open in your default browser
 
-## Build ed esecuzione
+## Requirements
 
-Da riga di comando, dalla cartella `Feedy` (quella con `Feedy.xcodeproj`):
+- macOS 15.0 or later
+- Xcode 26 or later to build from source (the app icon is an Icon Composer `.icon` file)
+
+## Installation
+
+### Build from source
+
+```bash
+git clone https://github.com/davideluzi/feedy.git
+cd feedy/Feedy
+xcodebuild -scheme Feedy -destination 'platform=macOS' -configuration Release build
+```
+
+To copy the built app into `/Applications`:
+
+```bash
+ditto "$(xcodebuild -scheme Feedy -showBuildSettings -configuration Release 2>/dev/null | awk -F'= ' '/ BUILT_PRODUCTS_DIR /{print $2; exit}')/Feedy.app" /Applications/Feedy.app
+```
+
+You can also open `Feedy/Feedy.xcodeproj` in Xcode and press **⌘R**.
+
+## Running the tests
 
 ```bash
 cd Feedy
-xcodebuild -scheme Feedy -destination 'platform=macOS' build
-```
-
-Test:
-
-```bash
 xcodebuild test -scheme Feedy -destination 'platform=macOS'
 ```
 
-Per creare una build Release installabile in `/Applications`, vedi [`build.md`](build.md).
+## Architecture
 
-## Struttura del progetto
+Feedy is built with Swift, SwiftUI, SwiftData and WKWebView, plus two dependencies: [FeedKit](https://github.com/nmdias/FeedKit) to parse feeds and [SwiftSoup](https://github.com/scinfu/SwiftSoup) to sanitize HTML.
+
+The core idea is a **pure domain layer** (`Feedy/Feedy/Core/`) that sits behind protocols and doesn't depend on SwiftUI, SwiftData or the network. That's why feed parsing, HTML sanitization, article import and rendering can all be unit-tested without a UI or a network connection.
 
 ```
-Feedy/                            Xcode project root (contiene Feedy.xcodeproj)
+Feedy/
   Feedy/
-    FeedyApp.swift                 Entry point dell'app, setup ModelContainer
-    ContentView.swift              Shell a tre colonne (NavigationSplitView)
-    Models/                        Entità SwiftData (Feed, Article)
-    Core/                          Logica di dominio pura/testabile (parsing, sanitizzazione, import, rendering)
-    Views/                         Viste SwiftUI (Sidebar, ArticleList, ArticleDetail, WebView, AddFeedSheet)
-    Resources/article.css          Foglio di stile unico per il rendering degli articoli
-  FeedyTests/
-    Fixtures/                      Fixture di feed XML e HTML "sporco" usate nei test
+    Models/      SwiftData entities (Feed, Article)
+    Core/        Domain logic: parsing, sanitization, import, rendering, translation
+    Views/       SwiftUI views (sidebar, article list, article detail, web view)
+    Resources/   article.css, the single stylesheet used for every article
+  FeedyTests/    Unit tests and fixtures (sample feeds, dirty HTML)
 ```
 
-La logica di dominio in `Core/` è disaccoppiata da SwiftUI/SwiftData/rete tramite protocolli, così parsing dei feed, sanitizzazione HTML, import articoli e rendering sono testabili senza UI né accesso di rete.
+Some design choices worth mentioning:
 
-Maggiori dettagli architetturali in [`CLAUDE.md`](CLAUDE.md).
+- **Articles are sanitized once, when they're fetched.** The app stores clean HTML, not the raw feed HTML, and renders it in a single `WKWebView`.
+- **Refreshing a feed never changes read state.** When an article is imported again, its content is updated but its read/unread flag is left alone.
+- **A failed refresh never deletes anything.** It records the error on the feed (which drives the health indicator) and keeps the existing articles.
+- **Only one file talks to FeedKit** (`FeedKitParser.swift`), so if the library changes, that's the only file to update.
 
-## Cosa manca (fuori scope per v1)
+More architectural notes are in [`CLAUDE.md`](CLAUDE.md).
 
-Estrazione full-text per feed troncati, auto-discovery dei feed da un URL, cartelle/gruppi, refresh in background, ricerca full-text nel corpo, caching immagini, pulizia/pruning del DB, fetch delle favicon.
+## Roadmap
+
+These are out of scope for v1 but may come later: full-text extraction for truncated feeds, feed auto-discovery from a website URL, folders, background refresh, full-text search, image caching and tracking-pixel blocking, favicons, and more translation languages.
+
+## How it was built
+
+I built Feedy with [Claude Code](https://claude.com/claude-code) as a pair programmer. We wrote a plan first, built it task by task with tests, and reviewed each step. The original plan and design specs are in [`docs/superpowers/`](docs/superpowers/).
+
+## License
+
+[MIT](LICENSE) © Davide Luzi
