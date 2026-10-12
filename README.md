@@ -38,6 +38,19 @@ Feedy is a native macOS RSS reader with a three-column layout like Mail. Your fe
 
 ## Installation
 
+### Download
+
+1. Download `Feedy-<version>.dmg` from the [latest release](https://github.com/davideluzi/feedy/releases/latest).
+2. Open the `.dmg` and drag **Feedy** into **Applications**.
+3. **First launch only:** Feedy isn't notarized by Apple yet, so macOS will block it the first time and say it can't verify the developer. To allow it:
+   - Try to open Feedy once, then click **Done** in the warning.
+   - Open **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to the message about Feedy.
+   - Confirm with your password or Touch ID.
+
+   After that, Feedy opens normally.
+
+Feedy is a universal app and runs natively on both Apple Silicon and Intel Macs.
+
 ### Build from source
 
 ```bash
@@ -53,6 +66,12 @@ ditto "$(xcodebuild -scheme Feedy -showBuildSettings -configuration Release 2>/d
 ```
 
 You can also open `Feedy/Feedy.xcodeproj` in Xcode and press **⌘R**.
+
+To build the same `.dmg` that's published in the releases (universal, ad-hoc signed, no Apple Developer account needed):
+
+```bash
+scripts/build-dmg.sh   # → build/Feedy-<version>.dmg
+```
 
 ## Running the tests
 
