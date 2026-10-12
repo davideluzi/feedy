@@ -3,7 +3,7 @@ import XCTest
 
 final class ArticleRendererTests: XCTestCase {
     func test_wrapsBodyInDocumentWithTitleAndCSS() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "<p>Hi</p>", css: "body{}")
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: nil, bodyHTML: "<p>Hi</p>", css: "body{}")
         XCTAssertTrue(html.contains("<style>body{}</style>"))
         XCTAssertTrue(html.contains("<h1>My Post</h1>"))
         XCTAssertTrue(html.contains("<p>Hi</p>"))
@@ -11,12 +11,12 @@ final class ArticleRendererTests: XCTestCase {
     }
 
     func test_escapesTitle() {
-        let html = ArticleRenderer.document(title: "A & B <x>", feedName: nil, bodyHTML: "", css: "")
+        let html = ArticleRenderer.document(title: "A & B <x>", feedName: nil, publishedDate: nil, bodyHTML: "", css: "")
         XCTAssertTrue(html.contains("A &amp; B &lt;x&gt;"))
     }
 
     func test_rendersFeedNameBeforeTitle() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: "Daring Fireball", bodyHTML: "", css: "")
+        let html = ArticleRenderer.document(title: "My Post", feedName: "Daring Fireball", publishedDate: nil, bodyHTML: "", css: "")
         guard let feedNameRange = html.range(of: "<p class=\"feed-name\">Daring Fireball</p>"),
               let titleRange = html.range(of: "<h1>My Post</h1>") else {
             XCTFail("expected both the feed-name element and the h1 title to be present")
@@ -26,22 +26,32 @@ final class ArticleRendererTests: XCTestCase {
     }
 
     func test_omitsFeedNameElementWhenNil() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "", css: "")
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: nil, bodyHTML: "", css: "")
         XCTAssertFalse(html.contains("feed-name"))
     }
 
     func test_escapesFeedName() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: "A & B <x>", bodyHTML: "", css: "")
+        let html = ArticleRenderer.document(title: "My Post", feedName: "A & B <x>", publishedDate: nil, bodyHTML: "", css: "")
         XCTAssertTrue(html.contains("<p class=\"feed-name\">A &amp; B &lt;x&gt;</p>"))
     }
 
     func test_defaultsToSeventeenPixelFontSize() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "", css: "")
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: nil, bodyHTML: "", css: "")
         XCTAssertTrue(html.contains("body { font-size: 17.0px; }"))
     }
 
     func test_appliesCustomFontSize() {
-        let html = ArticleRenderer.document(title: "My Post", feedName: nil, bodyHTML: "", css: "", fontSize: 22)
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: nil, bodyHTML: "", css: "", fontSize: 22)
         XCTAssertTrue(html.contains("body { font-size: 22.0px; }"))
+    }
+
+    func test_includesPublishedDateWhenPresent() {
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: Date(timeIntervalSince1970: 0), bodyHTML: "", css: "")
+        XCTAssertTrue(html.contains("<p class=\"published-date\">"))
+    }
+
+    func test_omitsPublishedDateWhenNil() {
+        let html = ArticleRenderer.document(title: "My Post", feedName: nil, publishedDate: nil, bodyHTML: "", css: "")
+        XCTAssertFalse(html.contains("published-date"))
     }
 }
