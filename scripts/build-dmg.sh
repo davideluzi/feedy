@@ -5,6 +5,10 @@
 # The app is not notarized: on first launch users must allow it in
 # System Settings → Privacy & Security → "Open Anyway".
 #
+# Hardened runtime is disabled: its library validation rejects the embedded
+# SwiftSoup.framework when nothing has a Team ID (ad-hoc signing), so the app
+# would crash at launch. It's only required for notarization anyway.
+#
 # Usage: scripts/build-dmg.sh   (from anywhere inside the repo)
 
 set -euo pipefail
@@ -31,6 +35,7 @@ xcodebuild \
   CODE_SIGN_STYLE=Manual \
   DEVELOPMENT_TEAM= \
   CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
+  ENABLE_HARDENED_RUNTIME=NO \
   build -quiet
 
 APP="$DERIVED_DATA/Build/Products/Release/Feedy.app"
