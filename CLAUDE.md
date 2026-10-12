@@ -18,7 +18,7 @@ A native macOS RSS reader ("Feedy") with a Mail-style three-column UI: feed list
 
 ## Commands
 
-Run from `/Users/davide/GitHub/feedy/Feedy` (the directory containing `Feedy.xcodeproj`):
+Run from `Feedy/` (relative to the repo root — the directory containing `Feedy.xcodeproj`):
 
 - Build: `xcodebuild -scheme Feedy -destination 'platform=macOS' build`
 - Run full test suite: `xcodebuild test -scheme Feedy -destination 'platform=macOS'`
