@@ -8,7 +8,9 @@
   A small, native RSS reader for macOS. Free and open source.
 </p>
 
-<!-- TODO: add a screenshot, e.g. assets/screenshot.png -->
+<p align="center">
+  <img src="assets/screenshots/main-views.png" alt="Feedy main window: feeds, article list and article view">
+</p>
 
 Feedy is a native macOS RSS reader with a three-column layout like Mail. Your feeds are on the left, the article list is in the middle (with read/unread state and search), and the selected article is on the right. Every article uses the same clean typography, whatever site it comes from.
 
@@ -22,6 +24,12 @@ Feedy is a native macOS RSS reader with a three-column layout like Mail. Your fe
 - **On-device translation** from English to Italian through Apple's `Translation` framework. Nothing is sent to third-party services.
 - A health indicator for each feed that shows the last fetch error, if there was one
 - Links open in your default browser
+
+## Screenshots
+
+| Reading a single feed | Adding a feed |
+|---|---|
+| ![A single feed selected, with an article and its cover image](assets/screenshots/selected-feed.png) | ![The Add Feed sheet](assets/screenshots/add-feed.png) |
 
 ## Requirements
 
